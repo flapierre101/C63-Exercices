@@ -22,7 +22,9 @@ public class Enemy : MonoBehaviour
         transform.position =  Vector3.MoveTowards(transform.position, playerObject.transform.position, Speed * Time.deltaTime);
         transform.right = playerObject.transform.position - transform.position;
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         var bullet = collision.gameObject.GetComponent<Bullet>();
         if (bullet != null)

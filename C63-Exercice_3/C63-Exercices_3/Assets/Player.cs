@@ -7,10 +7,12 @@ public class Player : MonoBehaviour
     public GameObject bullet;
     public Transform BulletSpawnPoint;
     private health Health;
-    public float DestroyTimer = 1;
+    public float DestroyTimer = 0;
+    private Flash flash;
     private void Start()
     {
         Health = GetComponent<health>();
+        flash = GetComponent<Flash>();
     }
 
     void Update()
@@ -30,21 +32,22 @@ public class Player : MonoBehaviour
             Instantiate(bullet, BulletSpawnPoint.position, rotation2);
             
         }
+        DestroyTimer -= Time.deltaTime;
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerStay2D(Collider2D collider)
     {
-        var enemy = collision.gameObject.GetComponent<Enemy>();
-        if (enemy != null)
+        var enemy = collider.gameObject.GetComponentInParent<Enemy>();
+        if (enemy != null && DestroyTimer <= 0)
         {
-            DestroyTimer -= Time.deltaTime;
-            if (DestroyTimer <= 0)
+            if (Health.hpProp > 0)
             {
                 Health.hpProp -= 1;
                 DestroyTimer = 1;
+                flash.StartFlash();
             }
 
           
-            if(Health.hpProp == 0)
+            if(Health.hpProp <= 0)
             {
                 Destroy(gameObject);
             }
