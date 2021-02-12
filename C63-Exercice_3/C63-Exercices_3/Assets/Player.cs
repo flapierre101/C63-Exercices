@@ -5,14 +5,17 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public GameObject bullet;
+    public GameObject BombObj;
     public Transform BulletSpawnPoint;
-    private health Health;
-    public float DestroyTimer = 0;
+    private health Health { get;  set; }
+    public float InvincibleTimer = 0;
     private Flash flash;
+    private Bomb Bomb;
     private void Start()
     {
         Health = GetComponent<health>();
         flash = GetComponent<Flash>();
+        Bomb = GetComponent<Bomb>();
     }
 
     void Update()
@@ -32,17 +35,25 @@ public class Player : MonoBehaviour
             Instantiate(bullet, BulletSpawnPoint.position, rotation2);
             
         }
-        DestroyTimer -= Time.deltaTime;
+        else if (Input.GetMouseButtonDown(2))
+        {
+            if (Bomb._startBomb > 0)
+            {
+                Instantiate(BombObj, BulletSpawnPoint.position, transform.rotation);
+                Bomb._startBomb -= 1;
+            }
+        }
+        InvincibleTimer -= Time.deltaTime;
     }
     private void OnTriggerStay2D(Collider2D collider)
     {
         var enemy = collider.gameObject.GetComponentInParent<Enemy>();
-        if (enemy != null && DestroyTimer <= 0)
+        if (enemy != null && InvincibleTimer <= 0)
         {
             if (Health.hpProp > 0)
             {
                 Health.hpProp -= 1;
-                DestroyTimer = 1;
+                InvincibleTimer = 2;
                 flash.StartFlash();
             }
 
