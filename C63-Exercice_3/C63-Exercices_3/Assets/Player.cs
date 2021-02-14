@@ -11,11 +11,16 @@ public class Player : MonoBehaviour
     public float InvincibleTimer = 0;
     private Flash flash;
     private Bomb Bomb;
+    private Score Score;
+    public AudioSource audioSourcePistol, audioSourceShotgun, audioSourceHurt, audioSourceExplosion;
+
+
     private void Start()
     {
         Health = GetComponent<health>();
         flash = GetComponent<Flash>();
         Bomb = GetComponent<Bomb>();
+        Score = GetComponent<Score>();
     }
 
     void Update()
@@ -24,7 +29,7 @@ public class Player : MonoBehaviour
         {
             //var rotation = transform.rotation * Quaternion.Euler(0.0f,0.0f,-30.0f);
             Instantiate(bullet, BulletSpawnPoint.position, transform.rotation);
-
+            audioSourcePistol.Play();
         }
         else if (Input.GetMouseButtonDown(1))
         {
@@ -33,7 +38,7 @@ public class Player : MonoBehaviour
             Instantiate(bullet, BulletSpawnPoint.position, transform.rotation);
             Instantiate(bullet, BulletSpawnPoint.position, rotation1);
             Instantiate(bullet, BulletSpawnPoint.position, rotation2);
-            
+            audioSourceShotgun.Play();
         }
         else if (Input.GetMouseButtonDown(2))
         {
@@ -53,6 +58,7 @@ public class Player : MonoBehaviour
             if (Health.hpProp > 0)
             {
                 Health.hpProp -= 1;
+                audioSourceHurt.Play();
                 InvincibleTimer = 2;
                 flash.StartFlash();
             }
@@ -60,6 +66,7 @@ public class Player : MonoBehaviour
           
             if(Health.hpProp <= 0)
             {
+                audioSourceExplosion.Play();
                 Destroy(gameObject);
             }
         }

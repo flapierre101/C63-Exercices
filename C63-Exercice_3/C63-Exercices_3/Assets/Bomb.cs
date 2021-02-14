@@ -9,6 +9,7 @@ public class Bomb : MonoBehaviour
     public GameObject Bullet;
     public float DestroyTimer = 1;
     private Flash flash;
+    public AudioSource audioSourceExplosion;
     
     void Start()
     {
@@ -21,6 +22,7 @@ public class Bomb : MonoBehaviour
         DestroyTimer -= Time.deltaTime;
         if (DestroyTimer <= 0)
         {
+            audioSourceExplosion.Play();
             float tempo = 45.0f;
             for (int i = 1; i <= 8; i++)
             {

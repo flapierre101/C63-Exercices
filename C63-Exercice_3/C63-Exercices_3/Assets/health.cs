@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class health : MonoBehaviour
 {
-    // Start is called before the first frame update
+   
     public int HealthValue = 5;
 
     public int hpProp

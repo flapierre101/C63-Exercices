@@ -19,6 +19,6 @@ public class PlayerHud : MonoBehaviour
     {
         PlayerBombText.text = Player.GetComponent<Bomb>()._startBomb.ToString();
         PlayerHealthText.text = Player.GetComponent<health>().HealthValue.ToString();
-        //PlayerScoreText = Player.GetComponent<Score>().GameScore.ToString();
+        PlayerScoreText.text = Player.GetComponent<Score>().ScoreProp.ToString();
     }
 }

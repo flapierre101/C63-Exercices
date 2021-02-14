@@ -9,6 +9,7 @@ public class Barrel : MonoBehaviour
     public GameObject Bullet;
     public float DestroyTimer = 2;
     private Flash flash;
+    public AudioSource audioSourceBullet, audioSourceExplosion;
     // Start is called before the first frame update
     void Start()
     {
@@ -31,11 +32,17 @@ public class Barrel : MonoBehaviour
                     var rotation1 = transform.rotation * Quaternion.Euler(0.0f, 0.0f, tempo*i);
                     Instantiate(Bullet, gameObject.transform.position, rotation1);
                 }
-                
+                audioSourceExplosion.Play();
                 Destroy(gameObject);
                 Instantiate(ExplosionBarrel, gameObject.transform.position, gameObject.transform.rotation);
             }
-        } 
+
+        }
+
+        if (Health.hpProp == 0)
+            if (!flash.enabled)
+                flash.StartFlash();
+
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -43,16 +50,7 @@ public class Barrel : MonoBehaviour
         if (bullet != null)
         {
             Health.hpProp -= 1;
-
-            if (Health.hpProp == 0)
-            {
-                if (!flash.enabled)
-                    flash.StartFlash();
-                else
-                    DestroyTimer = 0;
-            }
-            
-
+            audioSourceBullet.Play();
             Destroy(collision.gameObject);
 
         }

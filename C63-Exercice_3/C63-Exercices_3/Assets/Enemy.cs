@@ -8,6 +8,8 @@ public class Enemy : MonoBehaviour
     public GameObject playerObject {  get; private set; }
     public health Health;
     public GameObject Explosion;
+    public AudioSource audioSourceBullet, audioSourceExplosion;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,6 +23,11 @@ public class Enemy : MonoBehaviour
     {
         transform.position =  Vector3.MoveTowards(transform.position, playerObject.transform.position, Speed * Time.deltaTime);
         transform.right = playerObject.transform.position - transform.position;
+        if (Health.hpProp == 0)
+        {
+            audioSourceExplosion.Play();
+            Destroy(gameObject);
+        }
     }
 
 
@@ -29,14 +36,12 @@ public class Enemy : MonoBehaviour
         var bullet = collision.gameObject.GetComponent<Bullet>();
         if (bullet != null)
         {
+          
             Health.hpProp -= 1;
-
-            if (Health.hpProp == 0)
-            {
-                Destroy(gameObject);
-            }
+            playerObject.GetComponent<Score>().ScoreProp += 25;
+            
             Instantiate(Explosion, collision.gameObject.transform.position, collision.gameObject.transform.rotation);
-
+            audioSourceBullet.Play();
             Destroy(collision.gameObject);
             
         }
