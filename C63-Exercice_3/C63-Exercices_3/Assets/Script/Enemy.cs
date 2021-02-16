@@ -2,49 +2,48 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spawn : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
-    public float SpawnTimer = 5;
-    public GameObject Enemy, playerObject;
-    private health Health;
+    public float Speed = 1;
+    public GameObject playerObject {  get; private set; }
+    public Health Health;
     public GameObject Explosion;
-    public AudioSource audioSourceBullet, audioSourceSpawn, audioSourceExplosion;
+    public AudioSource audioSourceBullet, audioSourceExplosion;
+
     // Start is called before the first frame update
     void Start()
     {
         playerObject = FindObjectOfType<Player>().gameObject;
-        Health = GetComponent<health>();
+        Health = GetComponent<Health>();
 
     }
+
+    // Update is called once per frame
     void Update()
     {
-        SpawnTimer -= Time.deltaTime;
-        if (SpawnTimer <= 0)
-        {
-            Instantiate(Enemy, transform.position, transform.rotation);
-            audioSourceSpawn.Play();
-            SpawnTimer = 5;
-        }
-        if (Health.hpProp == 0)
+        transform.position =  Vector3.MoveTowards(transform.position, playerObject.transform.position, Speed * Time.deltaTime);
+        transform.right = playerObject.transform.position - transform.position;
+        if (Health.Value == 0)
         {
             audioSourceExplosion.Play();
             Destroy(gameObject);
         }
-
     }
+
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         var bullet = collision.gameObject.GetComponent<Bullet>();
         if (bullet != null)
         {
-            Health.hpProp -= 1;
+          
+            Health.Value -= 1;
             playerObject.GetComponent<Score>().ScoreProp += 25;
             
             Instantiate(Explosion, collision.gameObject.transform.position, collision.gameObject.transform.rotation);
             audioSourceBullet.Play();
             Destroy(collision.gameObject);
-
+            
         }
     }
-
 }

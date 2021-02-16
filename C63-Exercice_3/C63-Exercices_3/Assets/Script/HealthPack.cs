@@ -8,9 +8,9 @@ public class HealthPack : MonoBehaviour
     private void OnTriggerStay2D(Collider2D collider)
     {
         var Player = collider.gameObject.GetComponentInParent<Player>();
-        if (Player != null && Player.gameObject.GetComponentInParent<health>().hpProp < 5)
+        if (Player != null && Player.Health.Value < 5)
         {
-            Player.gameObject.GetComponentInParent<health>().hpProp++;
+            Player.gameObject.GetComponentInParent<Health>().Value++;
 
             Destroy(gameObject);
             

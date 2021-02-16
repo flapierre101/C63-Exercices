@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Barrel : MonoBehaviour
 {
-    public health Health;
+    public Health Health;
     public GameObject ExplosionBarrel;
     public GameObject Bullet;
     public float DestroyTimer = 2;
@@ -13,7 +13,7 @@ public class Barrel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Health = GetComponent<health>();
+        Health = GetComponent<Health>();
         flash = GetComponent<Flash>();
     }
 
@@ -39,7 +39,7 @@ public class Barrel : MonoBehaviour
 
         }
 
-        if (Health.hpProp == 0)
+        if (Health.Value == 0)
             if (!flash.enabled)
                 flash.StartFlash();
 
@@ -49,7 +49,7 @@ public class Barrel : MonoBehaviour
         var bullet = collision.gameObject.GetComponent<Bullet>();
         if (bullet != null)
         {
-            Health.hpProp -= 1;
+            Health.Value -= 1;
             audioSourceBullet.Play();
             Destroy(collision.gameObject);
 
