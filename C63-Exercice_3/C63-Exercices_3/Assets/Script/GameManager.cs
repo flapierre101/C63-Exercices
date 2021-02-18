@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
     }
 
     //propg tab tab
-    //public PrefabManager PrefabManager { get; private set; }
+    public PrefabManager PrefabManager { get; private set; }
     public SoundManager SoundManager { get; private set; }
 
     public Player Player { get; private set; }
@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
     private void Initialize()
     {
         SoundManager = GetComponentInChildren<SoundManager>();
-        //PrefabManager = GetComponentInChildren<PrefabManager>();
+        PrefabManager = GetComponentInChildren<PrefabManager>();
 
         SceneManager.sceneLoaded += OnSceneLoaded;
 

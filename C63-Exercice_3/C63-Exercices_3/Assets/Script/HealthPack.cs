@@ -4,16 +4,14 @@ using UnityEngine;
 
 public class HealthPack : MonoBehaviour
 {
-
     private void OnTriggerStay2D(Collider2D collider)
     {
-        var Player = collider.gameObject.GetComponentInParent<Player>();
-        if (Player != null && Player.Health.Value < 5)
+        var Player = GameManager.Instance.Player;
+        if (Player.gameObject == collider.gameObject && Player.Health.Value < 5)
         {
-            Player.gameObject.GetComponentInParent<Health>().Value++;
+            Player.Health.Value++;
 
-            Destroy(gameObject);
-            
+            Destroy(gameObject);  
         }
     }
 }

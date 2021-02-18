@@ -5,19 +5,15 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public GameObject bullet;
-    public GameObject BombObj;
     public Transform BulletSpawnPoint;
     public float InvincibleTimer = 0;
-
-    public AudioSource audioSourcePistol, audioSourceShotgun, audioSourceHurt, audioSourceExplosion;
 
     public Health Health { get; private set; }
     public Flash Flash { get; private set; }
     public Bomb Bomb { get; private set; }
     public Score Score { get; private set; }
 
-    private void Start()
+    private void Awake()
     {
         Health = GetComponent<Health>();
         Health.OnHit += OnHit;
@@ -30,12 +26,13 @@ public class Player : MonoBehaviour
     private void OnDeath(Health hp)
     {
         GameManager.Instance.SoundManager.Play(SoundManager.Sfx.Explosion);
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 
     private void OnHit(Health hp)
     {
-
+        InvincibleTimer = 2;
+        Flash.StartFlash();
         GameManager.Instance.SoundManager.Play(SoundManager.Sfx.Hit);
     }
 
@@ -43,27 +40,24 @@ public class Player : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-
-            Instantiate(bullet, BulletSpawnPoint.position, transform.rotation);
-
+            GameManager.Instance.PrefabManager.Instancier(PrefabManager.Global.bullet, BulletSpawnPoint.position, transform.rotation);
             GameManager.Instance.SoundManager.Play(SoundManager.Sfx.Pistol);
         }
         else if (Input.GetMouseButtonDown(1))
         {
             var rotation1 = transform.rotation * Quaternion.Euler(0.0f, 0.0f, -30.0f);
             var rotation2 = transform.rotation * Quaternion.Euler(0.0f, 0.0f, 30.0f);
-            Instantiate(bullet, BulletSpawnPoint.position, transform.rotation);
-            Instantiate(bullet, BulletSpawnPoint.position, rotation1);
-            Instantiate(bullet, BulletSpawnPoint.position, rotation2);
-
+            GameManager.Instance.PrefabManager.Instancier(PrefabManager.Global.bullet, BulletSpawnPoint.position, transform.rotation);
+            GameManager.Instance.PrefabManager.Instancier(PrefabManager.Global.bullet, BulletSpawnPoint.position, rotation1);
+            GameManager.Instance.PrefabManager.Instancier(PrefabManager.Global.bullet, BulletSpawnPoint.position, rotation2);
             GameManager.Instance.SoundManager.Play(SoundManager.Sfx.Shotgun);
         }
         else if (Input.GetMouseButtonDown(2))
         {
-            if (Bomb._startBomb > 0)
+            if (Bomb.BombValue > 0)
             {
-                Instantiate(BombObj, BulletSpawnPoint.position, transform.rotation);
-                Bomb._startBomb -= 1;
+                GameManager.Instance.PrefabManager.Instancier(PrefabManager.Global.bomb, BulletSpawnPoint.position, transform.rotation);
+                Bomb.BombValue -= 1;
             }
         }
         if (InvincibleTimer > 0)
@@ -74,20 +68,8 @@ public class Player : MonoBehaviour
     private void OnTriggerStay2D(Collider2D collider)
     {
         var enemy = collider.gameObject.GetComponentInParent<Enemy>();
-        //var player = GameManager.Instance.Player;
         if (enemy != null && InvincibleTimer <= 0)
-        {
             if (Health.Value > 0)
-            {
-                //Health.hpProp -= 1;
-                //audioSourceHurt.Play();
                 Health.Value -= 1;
-                InvincibleTimer = 2;
-                Flash.StartFlash();
-            }
-
-
-
-        }
     }
 }

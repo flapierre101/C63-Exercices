@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class Bomb : MonoBehaviour
 {
-    public int _startBomb = 1;
-    public GameObject ExplosionBarrel;
-    public GameObject Bullet;
-    public float DestroyTimer = 1;
+    public delegate void BombEvent(Bomb bomb);
+
+    //Listener
+    public BombEvent OnBombChanged;
+
+    public int StartBomb = 1;
+    private int _startBomb;
+    private float DestroyTimer = 1;
     private Flash flash;
-    public AudioSource audioSourceExplosion;
     
     void Start()
     {
@@ -22,21 +25,36 @@ public class Bomb : MonoBehaviour
         DestroyTimer -= Time.deltaTime;
         if (DestroyTimer <= 0)
         {
-            audioSourceExplosion.Play();
+            GameManager.Instance.SoundManager.Play(SoundManager.Sfx.Explosion);
             float tempo = 45.0f;
             for (int i = 1; i <= 8; i++)
             {
                 var rotation1 = transform.rotation * Quaternion.Euler(0.0f, 0.0f, tempo * i);
-                Instantiate(Bullet, gameObject.transform.position, rotation1);
+                GameManager.Instance.PrefabManager.Instancier(PrefabManager.Global.bullet, gameObject.transform.position, rotation1);
             }
 
             Destroy(gameObject);
-            Instantiate(ExplosionBarrel, gameObject.transform.position, gameObject.transform.rotation);
+            GameManager.Instance.PrefabManager.Instancier
+                (PrefabManager.Global.explosionBarrel, gameObject.transform.position, gameObject.transform.rotation);
         }
     }
-    public int BombProp
+    private void Awake()
+    {
+        BombValue = StartBomb;
+    }
+
+    public int BombValue
     {
         get { return _startBomb; }
-        set { _startBomb = value; }
+        set 
+        {
+            var previous = _startBomb;
+            _startBomb = Mathf.Clamp(value, 0, StartBomb);
+            if (_startBomb != previous)
+            {
+                OnBombChanged?.Invoke(this);
+            }
+            _startBomb = value; 
+        }
     }
 }

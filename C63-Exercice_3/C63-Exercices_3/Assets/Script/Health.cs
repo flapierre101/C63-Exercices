@@ -11,9 +11,7 @@ public class Health : MonoBehaviour
     public HealthEvent OnHit;
     public HealthEvent OnDeath;
 
-    public int HealthValue = 5;
-
-  
+    public int HealthValue;
     private int _value;
 
     public int Value
@@ -33,18 +31,16 @@ public class Health : MonoBehaviour
                     OnHit?.Invoke(this);
                 }
 
-                if (_value <= 0)
+                if (_value == 0)
                 {
                     OnDeath?.Invoke(this);
                 }
             }
             _value = value; 
-         
         }
     }
     private void Awake()
     {
         Value = HealthValue;
     }
-
 }

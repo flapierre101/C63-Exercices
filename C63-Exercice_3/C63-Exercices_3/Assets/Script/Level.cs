@@ -6,14 +6,11 @@ using UnityEngine;
 public class Level : MonoBehaviour
 {
     public BoxCollider2D LevelCollider;
-    public GameObject MonsterObject, BarrelObject, SpawnerObject, PackHealth, PackBomb;
     public float MonsterTimer = 3, BarrelTimer = 10, SpawnerTimer = 20, PacksTimer = 10;
-    public AudioSource audioSource;
 
     private void Start()
     {
-        audioSource.volume = 0.10F;
-        audioSource.Play();
+        GameManager.Instance.SoundManager.Play(SoundManager.Music.Music); 
     }
     void Update()
     {
@@ -26,17 +23,17 @@ public class Level : MonoBehaviour
         if (MonsterTimer<=0)
         {
             MonsterTimer = 3;
-            Instantiate(MonsterObject, RandomPoint(), Quaternion.identity);
+            GameManager.Instance.PrefabManager.Instancier(PrefabManager.Global.monster, RandomPoint(), Quaternion.identity);
         }   
         else if (BarrelTimer <= 0)
         {
             BarrelTimer = 10;
-            Instantiate(BarrelObject, RandomPoint(), Quaternion.identity);
+            GameManager.Instance.PrefabManager.Instancier(PrefabManager.Global.barrel, RandomPoint(), Quaternion.identity);
         }
         else if (SpawnerTimer <= 0)
         {
             SpawnerTimer = 20;
-            Instantiate(SpawnerObject, RandomPoint(), Quaternion.identity);
+            GameManager.Instance.PrefabManager.Instancier(PrefabManager.Global.spawner, RandomPoint(), Quaternion.identity);
         }
         else if (PacksTimer <= 0)
         {
@@ -46,13 +43,12 @@ public class Level : MonoBehaviour
 
             if (PileOuFace == 1)
             {
-                Instantiate(PackHealth, RandomPoint(), Quaternion.identity);
+                GameManager.Instance.PrefabManager.Instancier(PrefabManager.Global.pickupHealth, RandomPoint(), Quaternion.identity);
             }
             else
             {
-                Instantiate(PackBomb, RandomPoint(), Quaternion.identity);
+                GameManager.Instance.PrefabManager.Instancier(PrefabManager.Global.pickupBomb, RandomPoint(), Quaternion.identity);
             }
-            
         }
     }
 

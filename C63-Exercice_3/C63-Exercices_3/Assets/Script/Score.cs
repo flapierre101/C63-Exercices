@@ -4,11 +4,21 @@ using UnityEngine;
 
 public class Score : MonoBehaviour
 {
-    private int ScoreTotal = 0;
+    public delegate void ScoreEvent(Score score);
 
-    public int ScoreProp
+    //Listener
+    public ScoreEvent OnScoreChanged;
+
+    //private int ScoreTotal;
+    private int _score;
+
+    public int ScoreValue
     {
-        get { return ScoreTotal; }
-        set { ScoreTotal = value; }
+        get { return _score; }
+        set 
+        {
+            OnScoreChanged?.Invoke(this);
+            _score = value; 
+        }
     }
 }

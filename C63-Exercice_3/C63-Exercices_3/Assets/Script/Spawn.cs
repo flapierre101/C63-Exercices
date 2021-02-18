@@ -5,32 +5,28 @@ using UnityEngine;
 public class Spawn : MonoBehaviour
 {
     public float SpawnTimer = 5;
-    public GameObject Enemy, playerObject;
+    private Player Player;
     private Health Health;
-    public GameObject Explosion;
-    public AudioSource audioSourceBullet, audioSourceSpawn, audioSourceExplosion;
-    // Start is called before the first frame update
-    void Start()
-    {
-        playerObject = FindObjectOfType<Player>().gameObject;
-        Health = GetComponent<Health>();
 
+    void Awake()
+    {
+        Player = GameManager.Instance.Player;
+        Health = GetComponent<Health>();
     }
     void Update()
     {
         SpawnTimer -= Time.deltaTime;
         if (SpawnTimer <= 0)
         {
-            Instantiate(Enemy, transform.position, transform.rotation);
-            audioSourceSpawn.Play();
+            GameManager.Instance.PrefabManager.Instancier(PrefabManager.Global.monster2, transform.position, transform.rotation);
+            GameManager.Instance.SoundManager.Play(SoundManager.Sfx.Spawn);
             SpawnTimer = 5;
         }
-        if (Health.Value == 0)
+        if (Health.Value <= 0)
         {
-            audioSourceExplosion.Play();
+            GameManager.Instance.SoundManager.Play(SoundManager.Sfx.Explosion);
             Destroy(gameObject);
         }
-
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -38,13 +34,11 @@ public class Spawn : MonoBehaviour
         if (bullet != null)
         {
             Health.Value -= 1;
-            playerObject.GetComponent<Score>().ScoreProp += 25;
-            
-            Instantiate(Explosion, collision.gameObject.transform.position, collision.gameObject.transform.rotation);
-            audioSourceBullet.Play();
-            Destroy(collision.gameObject);
+            Player.Score.ScoreValue += 25;
 
+            GameManager.Instance.PrefabManager.Instancier(PrefabManager.Global.explosion, collision.gameObject.transform.position, collision.gameObject.transform.rotation);
+            GameManager.Instance.SoundManager.Play(SoundManager.Sfx.Pistol);
+            Destroy(collision.gameObject);
         }
     }
-
 }

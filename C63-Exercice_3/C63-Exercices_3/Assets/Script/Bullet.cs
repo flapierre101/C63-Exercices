@@ -4,18 +4,14 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public float Speed = 10;
-    public float DestroyTimer = 3;
-
+    private float Speed = 10;
+    private float DestroyTimer = 3;
     void Update()
     {
         transform.position += transform.right * Speed * Time.deltaTime;
 
         DestroyTimer -= Time.deltaTime;
         if (DestroyTimer <= 0)
-        {
             Destroy(gameObject);
-        }
     }
-    
 }

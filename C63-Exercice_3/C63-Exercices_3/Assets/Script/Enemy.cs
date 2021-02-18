@@ -1,33 +1,35 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
     public float Speed = 1;
-    public GameObject playerObject {  get; private set; }
+    private Player Player;
     public Health Health;
-    public GameObject Explosion;
-    public AudioSource audioSourceBullet, audioSourceExplosion;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        playerObject = FindObjectOfType<Player>().gameObject;
+        Player = GameManager.Instance.Player;
         Health = GetComponent<Health>();
-
+        Health.OnDeath += Ondeath;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Ondeath(Health hp)
     {
-        transform.position =  Vector3.MoveTowards(transform.position, playerObject.transform.position, Speed * Time.deltaTime);
-        transform.right = playerObject.transform.position - transform.position;
-        if (Health.Value == 0)
+        if (hp.Value <= 0)
         {
-            audioSourceExplosion.Play();
+            GameManager.Instance.SoundManager.Play(SoundManager.Sfx.Explosion);
             Destroy(gameObject);
         }
+    }
+
+    void Update()
+    {
+        transform.position =  Vector3.MoveTowards(transform.position, Player.transform.position, Speed * Time.deltaTime);
+        transform.right = Player.transform.position - transform.position;
+
     }
 
 
@@ -38,10 +40,10 @@ public class Enemy : MonoBehaviour
         {
           
             Health.Value -= 1;
-            playerObject.GetComponent<Score>().ScoreProp += 25;
-            
-            Instantiate(Explosion, collision.gameObject.transform.position, collision.gameObject.transform.rotation);
-            audioSourceBullet.Play();
+            Player.Score.ScoreValue += 25;
+
+            GameManager.Instance.PrefabManager.Instancier(PrefabManager.Global.explosion, collision.gameObject.transform.position, collision.gameObject.transform.rotation);
+            GameManager.Instance.SoundManager.Play(SoundManager.Sfx.Pistol);
             Destroy(collision.gameObject);
             
         }
