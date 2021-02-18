@@ -797,7 +797,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e45c024fbb17baf4a93c85721279cb14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TargetTransform: {fileID: 1973630217}
+  TargetTransform: {fileID: 0}
 --- !u!1001 &1401447459
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -900,21 +900,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LevelCollider: {fileID: 1481023759}
-  MonsterObject: {fileID: 439487520648975999, guid: 409af4258c3b5a64ab9bcd919252812c,
-    type: 3}
-  BarrelObject: {fileID: 3821075054348344905, guid: 18377cfd406a9ab4486387973a90dca6,
-    type: 3}
-  SpawnerObject: {fileID: 5977028930130494986, guid: 2a8de6efca88a6548971954884e61fa5,
-    type: 3}
-  PackHealth: {fileID: 1626808502446406976, guid: 7252ad5b9cc471f459410e9dbe8aad5d,
-    type: 3}
-  PackBomb: {fileID: 1733720001241570122, guid: a2140beec50f5c94d802ab8a8731a1ca,
-    type: 3}
   MonsterTimer: 3
   BarrelTimer: 10
   SpawnerTimer: 20
   PacksTimer: 10
-  audioSource: {fileID: 1481023762}
 --- !u!61 &1481023759
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1411,14 +1400,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8619abb5b9c7a60408403ec1d91be7c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bullet: {fileID: 8671164060559828447, guid: bb1690892b4e83c4397f4ee84b48d392, type: 3}
-  BombObj: {fileID: 8004137337449878160, guid: c103db0f213cb0544bf2457c412df534, type: 3}
   BulletSpawnPoint: {fileID: 1717042991}
   InvincibleTimer: 2
-  audioSourcePistol: {fileID: 0}
-  audioSourceShotgun: {fileID: 0}
-  audioSourceHurt: {fileID: 0}
-  audioSourceExplosion: {fileID: 0}
 --- !u!114 &1973630220
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1497,9 +1480,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   StartBomb: 1
-  ExplosionBarrel: {fileID: 0}
-  Bullet: {fileID: 0}
-  DestroyTimer: 1
 --- !u!114 &1973630225
 MonoBehaviour:
   m_ObjectHideFlags: 0
