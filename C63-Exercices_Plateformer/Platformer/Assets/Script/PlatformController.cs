@@ -285,16 +285,16 @@ public class PlatformController : MonoBehaviour
         // Ground
         {
             var bounds = BoxCollider2D.bounds;
-            //bounds.center = bounds.center.WithY(bounds.center.y - bounds.extents.y);
-            //bounds.extents = bounds.extents.WithY(ColliderSize.y / 2);
+            bounds.center = bounds.center.WithY(bounds.center.y - bounds.extents.y);
+            bounds.extents = bounds.extents.WithY(ColliderSize.y / 2);
             DebugDrawBox(bounds, IsGrounded);
         }
 
         // Ceiling
         {
             var bounds = BoxCollider2D.bounds;
-            //bounds.center = bounds.center.WithY(bounds.center.y + bounds.extents.y);
-            //bounds.extents = bounds.extents.WithY(ColliderSize.y / 2);
+            bounds.center = bounds.center.WithY(bounds.center.y + bounds.extents.y);
+            bounds.extents = bounds.extents.WithY(ColliderSize.y / 2);
             DebugDrawBox(bounds, IsCeiling);
         }
 
