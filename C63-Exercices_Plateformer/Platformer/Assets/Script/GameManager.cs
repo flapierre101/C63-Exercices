@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
             // TODO: use a bootloader instead to create this before level is started since it can be expensive to load all assets
             if (_instance == null)
             {
-                var gameManagerGameObject = Resources.Load<GameObject>("shooter/prefabs/GameManager");
+                var gameManagerGameObject = Resources.Load<GameObject>("prefabs/GameManager");
                 var managerObject = Instantiate(gameManagerGameObject);
                 _instance = managerObject.GetComponent<GameManager>();
                 _instance.Initialize();
@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    //public Player Player { get; private set; }
+    public Mario Mario { get; private set; }
 
     private void Initialize()
     {
@@ -57,6 +57,6 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded()
     {
-        //Player = FindObjectOfType<Player>();
+        Mario = FindObjectOfType<Mario>();
     }
 }

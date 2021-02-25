@@ -107,9 +107,11 @@ public class Mario : MonoBehaviour
 
             if (marioPosition>enemyPosition)
             {
-                //Mario wins
+                // Mario wins
                 health.Value -= 1;
                 PlatformController.Jump();
+                GameManager.Instance.PrefabManager.Instancier(PrefabManager.Global.Smoke, collision.gameObject.transform.position, collision.gameObject.transform.rotation);
+                GameManager.Instance.SoundManager.Play(SoundManager.Sfx.Stomp);
             }
             else
             {
@@ -117,6 +119,13 @@ public class Mario : MonoBehaviour
 
                 Health.Value -= 1;
             }
+        }
+
+        var spike = collision.GetComponent<Spike>();
+
+        if (spike != null) 
+        {
+            Health.Value -= 1;
         }
     }
 }

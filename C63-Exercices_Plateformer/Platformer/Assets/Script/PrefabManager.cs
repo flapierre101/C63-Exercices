@@ -6,16 +6,13 @@ public class PrefabManager : MonoBehaviour
 {
     public enum Global
     {
-        barrel,
-        bomb,
-        bullet,
-        explosion,
-        explosionBarrel,
-        monster,
-        monster2,
-        pickupBomb,
-        pickupHealth,
-        spawner,
+        Smoke,
+
+        Count
+    };
+    public enum Vfx
+    {
+       
 
         Count
     };
@@ -24,8 +21,8 @@ public class PrefabManager : MonoBehaviour
 
     public void Awake()
     {
-        // https://docs.unity3d.com/ScriptReference/Resources.html
-        PrefabsObjects = Resources.LoadAll<GameObject>("shooter/prefabs/global");
+        
+        PrefabsObjects = Resources.LoadAll<GameObject>("prefabs/global");
         Debug.Assert((int)Global.Count == PrefabsObjects.Length, "PrefabsObjects : Prefabs enum length (" + 
             (int)Global.Count + ") does not match Resources folder (" + PrefabsObjects.Length + ")");
     }
