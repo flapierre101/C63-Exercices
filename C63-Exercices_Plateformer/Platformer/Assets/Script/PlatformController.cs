@@ -93,7 +93,7 @@ public class PlatformController : MonoBehaviour
         IsJumping = true;
         IsFalling = false;
         OnJump?.Invoke(this);
-        GameManager.Instance.SoundManager.Play(SoundManager.Sfx.Jump);
+        
     }
 
     private void Awake()

@@ -26,14 +26,13 @@ public class Mario : MonoBehaviour
 
     private void OnDeath(Health hp)
     {
-        //Destroy(gameObject);
         Animator.Play("Mario_Dead");
         PlatformController.enabled = false;
         PlatformController.Rigidbody2D.simulated = false;
         PlatformController.BoxCollider2D.enabled = false;
 
         GameManager.Instance.Invoke(nameof(GameManager.RestartLevel), 3.0f);
-        Destroy(gameObject);
+        //Destroy(gameObject);
         
     }
 
@@ -110,6 +109,7 @@ public class Mario : MonoBehaviour
                 // Mario wins
                 health.Value -= 1;
                 PlatformController.Jump();
+                GameManager.Instance.SoundManager.Play(SoundManager.Sfx.Jump);
                 GameManager.Instance.PrefabManager.Instancier(PrefabManager.Global.Smoke, collision.gameObject.transform.position, collision.gameObject.transform.rotation);
                 GameManager.Instance.SoundManager.Play(SoundManager.Sfx.Stomp);
             }
@@ -126,6 +126,14 @@ public class Mario : MonoBehaviour
         if (spike != null) 
         {
             Health.Value -= 1;
+        }
+
+        var shell = collision.GetComponent<Shell>();
+
+        if (shell != null)
+        {
+            GameManager.Instance.SoundManager.Play(SoundManager.Sfx.Kick);
+            
         }
     }
 }

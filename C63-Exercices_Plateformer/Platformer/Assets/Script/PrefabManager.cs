@@ -6,7 +6,9 @@ public class PrefabManager : MonoBehaviour
 {
     public enum Global
     {
+        Shell,
         Smoke,
+        Turtle1,
 
         Count
     };

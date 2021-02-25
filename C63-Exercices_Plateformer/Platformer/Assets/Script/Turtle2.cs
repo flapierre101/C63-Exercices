@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Turtle1 : MonoBehaviour
+public class Turtle2 : MonoBehaviour
 {
     public PlatformController PlatformController { get; private set; }
     public Health Health { get; private set; }
+
+    //private float _jumpTimer;
 
     private void Awake()
     {
@@ -17,7 +19,8 @@ public class Turtle1 : MonoBehaviour
 
     private void OnDeath(Health hp)
     {
-        GameManager.Instance.PrefabManager.Instancier(PrefabManager.Global.Shell, gameObject.transform.position,
+
+        GameManager.Instance.PrefabManager.Instancier(PrefabManager.Global.Turtle1, gameObject.transform.position,
                     gameObject.transform.rotation);
         Destroy(gameObject);
     }
@@ -31,5 +34,11 @@ public class Turtle1 : MonoBehaviour
     private void Update()
     {
         PlatformController.InputMove = PlatformController.FacingController.Direction;
+        if (PlatformController.IsGrounded)
+        {
+            PlatformController.Jump();
+            //_jumpTimer = 0.7f;
+        }
+        //_jumpTimer -= Time.deltaTime;
     }
 }
