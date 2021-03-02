@@ -5,7 +5,8 @@ using UnityEngine;
 public class Health : MonoBehaviour
 {
     public delegate void HealthEvent(Health hp);
-
+    public float InvincibilityTime = 0.1f;
+    public float InvincibilityTimer { get; private set; }
     //Listener
     public HealthEvent OnChanged;
     public HealthEvent OnHit;
@@ -28,6 +29,7 @@ public class Health : MonoBehaviour
 
                 if (_value < previous)
                 {
+                    InvincibilityTimer = InvincibilityTime;
                     OnHit?.Invoke(this);
                 }
 
@@ -39,8 +41,19 @@ public class Health : MonoBehaviour
             _value = value; 
         }
     }
+    public bool CanBeDamaged
+    {
+        get
+        {
+            return InvincibilityTimer <= 0.0f;
+        }
+    }
     private void Awake()
     {
         Value = HealthValue;
+    }
+    private void Update()
+    {
+        InvincibilityTimer -= Time.deltaTime;
     }
 }

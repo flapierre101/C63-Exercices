@@ -27,6 +27,7 @@ public class Mario : MonoBehaviour
     private void OnDeath(Health hp)
     {
         Animator.Play("Mario_Dead");
+        GameManager.Instance.SoundManager.Play(SoundManager.Sfx.Dead);
         PlatformController.enabled = false;
         PlatformController.Rigidbody2D.simulated = false;
         PlatformController.BoxCollider2D.enabled = false;
@@ -78,7 +79,7 @@ public class Mario : MonoBehaviour
 
     private void Update()
     {
-        PlatformController.InputJump = Input.GetButtonDown("Jump");
+        PlatformController.InputJump |= Input.GetButtonDown("Jump");
         PlatformController.InputMove = Input.GetAxisRaw("Horizontal");
 
         //Run speed
@@ -96,10 +97,19 @@ public class Mario : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        OnTrigger(collision);
+    }
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        OnTrigger(collision);
+    }
+
+    private void OnTrigger(Collider2D collision)
+    {
         Debug.Log("TEST");
 
         var health = collision.GetComponentInParent<Health>();
-        if (health)
+        if (health && health.CanBeDamaged)
         {
             var marioPosition = PlatformController.BoxCollider2D.bounds.min.y;
             var enemyPosition = collision.bounds.min.y + 0.5 * collision.bounds.extents.y;
@@ -128,12 +138,6 @@ public class Mario : MonoBehaviour
             Health.Value -= 1;
         }
 
-        var shell = collision.GetComponent<Shell>();
 
-        if (shell != null)
-        {
-            GameManager.Instance.SoundManager.Play(SoundManager.Sfx.Kick);
-            
-        }
     }
 }

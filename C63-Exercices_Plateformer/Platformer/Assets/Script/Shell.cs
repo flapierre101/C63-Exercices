@@ -9,12 +9,16 @@ public class Shell : MonoBehaviour
     public Animator Animator { get; private set; }
 
     private Mario Mario;
+    private bool isMoving = false;
+
     private void Awake()
     {
+        PlatformController = GetComponent<PlatformController>();
+        Animator = GetComponent<Animator>();
         PlatformController.OnMoveStart += OnMoveStart;
         PlatformController.OnMoveStop += OnMoveStop;
+        PlatformController.OnWall += OnWall;
         Mario = GameManager.Instance.Mario;
-        Animator = GetComponent<Animator>();
     }
 
     private void OnMoveStop(PlatformController platformController)
@@ -24,7 +28,13 @@ public class Shell : MonoBehaviour
 
     private void OnMoveStart(PlatformController platformController)
     {
+        PlatformController.InputMove = PlatformController.FacingController.Direction;
         Animator.Play("Shell_Move");
+    }
+    private void OnWall(PlatformController platformController)
+    {
+        PlatformController.FacingController.Flip();
+        PlatformController.InputMove = PlatformController.FacingController.Direction;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -32,15 +42,41 @@ public class Shell : MonoBehaviour
         var health = collision.GetComponentInParent<Health>();
         if (health)
         {
-            if (collision.gameObject == Mario)
-            {
-                Mario.Health.Value -= 1;
-            }
-            else
-            {
+            
+            var shellPosition = PlatformController.BoxCollider2D.bounds.min.y + 0.5 * PlatformController.BoxCollider2D.bounds.extents.y;
+            var marioPosition = collision.bounds.min.y;
+            GameManager.Instance.SoundManager.Play(SoundManager.Sfx.Kick);
+            if (marioPosition < shellPosition && PlatformController.IsMoving)
                 health.Value -= health.Value;
+            else if (collision.GetComponent<Mario>())
+            {
+                
+                if (PlatformController.IsMoving)
+                {
+                    Mario.PlatformController.Jump();
+                    isMoving = false;
+                    PlatformController.InputMove = 0;
+                }
+                else
+                {
+                    isMoving = true;
+                    if (Mario.GetComponent<Transform>().position.x < gameObject.GetComponent<Transform>().position.x)
+                    {
+                        PlatformController.FacingController.Facing = Facing.Right;
+                    }
+                    else
+                    {
+                        PlatformController.FacingController.Facing = Facing.Left;
+                    }
+                }
             }
         }
 
+
+    }
+    private void Update()
+    {
+        if (isMoving)
+            PlatformController.InputMove = PlatformController.FacingController.Direction;
     }
 }

@@ -221,9 +221,10 @@ MonoBehaviour:
   MoveSpeed: 0.5
   MoveAcceleration: 1000
   MoveDeceleration: 1000
-  AirMoveSpeedMultiplier: 1
+  AirMoveSpeedMultiplier: 10
   JumpStrength: 150
   Jumps: 1
+  JumpDelay: 0.05
 --- !u!114 &3540743208160174193
 MonoBehaviour:
   m_ObjectHideFlags: 0

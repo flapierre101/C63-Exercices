@@ -22,6 +22,7 @@ public class Turtle2 : MonoBehaviour
 
         GameManager.Instance.PrefabManager.Instancier(PrefabManager.Global.Turtle1, gameObject.transform.position,
                     gameObject.transform.rotation);
+        
         Destroy(gameObject);
     }
 
@@ -34,11 +35,7 @@ public class Turtle2 : MonoBehaviour
     private void Update()
     {
         PlatformController.InputMove = PlatformController.FacingController.Direction;
-        if (PlatformController.IsGrounded)
-        {
-            PlatformController.Jump();
-            //_jumpTimer = 0.7f;
-        }
-        //_jumpTimer -= Time.deltaTime;
+        PlatformController.InputJump = true;
+        
     }
 }

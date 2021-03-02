@@ -40,6 +40,7 @@ public class PlatformController : MonoBehaviour
     public float AirMoveSpeedMultiplier = 1.0f;
     public float JumpStrength = 200;
     public int Jumps = 1;
+    public float JumpDelay = 0.05f;
 
     private int _layerMask;
 
@@ -75,6 +76,8 @@ public class PlatformController : MonoBehaviour
         }
     }
 
+    private float JumpDelayTimer { get; set; }
+
     public void ResetJumpsRemaining()
     {
         JumpsRemaining = Jumps;
@@ -90,10 +93,10 @@ public class PlatformController : MonoBehaviour
         Rigidbody2D.AddForce(Vector2.up * jumpStrength);
 
         JumpsRemaining -= 1;
+        JumpDelayTimer = JumpDelay;
         IsJumping = true;
         IsFalling = false;
         OnJump?.Invoke(this);
-        
     }
 
     private void Awake()
@@ -109,6 +112,12 @@ public class PlatformController : MonoBehaviour
 
     private void Update()
     {
+        JumpDelayTimer -= Time.deltaTime;
+    }
+
+    private void FixedUpdate()
+    {
+
         PreviousState previousState;
         previousState.WasGrounded = IsGrounded;
         previousState.WasCeiling = IsCeiling;
@@ -187,6 +196,9 @@ public class PlatformController : MonoBehaviour
         InputJump = false;
 
         if (JumpsRemaining <= 0)
+            return;
+
+        if (JumpDelayTimer > 0.0f)
             return;
 
         if (IsGrounded

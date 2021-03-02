@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
+    public Plane[] FrustumPlanes { get; private set; }
 
     public static GameManager Instance
     {
@@ -39,6 +40,7 @@ public class GameManager : MonoBehaviour
     }
 
     public Mario Mario { get; private set; }
+    public Camera Camera { get; private set; }
 
     private void Initialize()
     {
@@ -57,6 +59,20 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded()
     {
+        Camera = FindObjectOfType<Camera>();
         Mario = FindObjectOfType<Mario>();
+    }
+
+    private void Update()
+    {
+        FrustumPlanes = GeometryUtility.CalculateFrustumPlanes(Camera.main);
+    }
+
+    public bool IsInsideCamera(Renderer renderer)
+    {
+        if (GeometryUtility.TestPlanesAABB(FrustumPlanes, renderer.bounds))
+            return true;
+
+        return false;
     }
 }

@@ -9,6 +9,7 @@ public class PrefabManager : MonoBehaviour
         Shell,
         Smoke,
         Turtle1,
+        Bullet,
 
         Count
     };
