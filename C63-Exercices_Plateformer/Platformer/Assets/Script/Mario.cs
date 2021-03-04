@@ -5,43 +5,58 @@ using UnityEngine;
 
 public class Mario : MonoBehaviour
 {
-    //public enum State
-    //{
-    //    Small,
-    //    Big,
-    //    Fire,
-    //}
-    //public enum Animation
-    //{
-    //    Idle,
-    //    Jump,
-    //    Run,
-    //    Dead,
-    //}
+    public enum State
+    {
+        Small,
+        Big,
+        Fire,
+    }
+    public enum Animation
+    {
+        Idle,
+        Jump,
+        Run,
+        Dead,
+    }
 
-    //private State _curentState;
+    private State _currentState;
 
-    //public State CurrentState
-    //{
-    //    get { return _curentState; }
-    //    set
-    //    {
-    //        _curentState = value;
-    //        UpdateAnimations();
-    //    }
-    //}
+    public State CurrentState
+    {
+        get { return _currentState; }
+        set 
+        { 
+            _currentState = value;
+            UpdateAnimations();
+        }
+    }
+    private Animation _currentAnimation;
 
-    //public string AnimationName { 
-    //    get {
-    //        var prefix = CurrentState.ToString();
-    //        var suffix = CurrentState.ToString();
-    //        return "Mario_" + prefix + " " + suffix;
-    //    } 
-    //}
-    //private void UpdateAnimations()
-    //{
-    //    var animationName = AnimationName;
-    //}
+    public Animation CurrentAnimation
+    {
+        get { return _currentAnimation; }
+        set
+        {
+            _currentAnimation = value;
+            UpdateAnimations();
+        }
+    }
+
+
+    public string AnimationName
+    {
+        get
+        {
+            var prefix = CurrentState.ToString();
+            var suffix = CurrentAnimation.ToString();
+            return "Mario_" + prefix + "_" + suffix;
+        }
+    }
+    private void UpdateAnimations()
+    {
+        var animationName = AnimationName;
+        Animator.Play(animationName);
+    }
 
     public PlatformController PlatformController { get; private set; }
     public Animator Animator { get; private set; }
@@ -60,7 +75,7 @@ public class Mario : MonoBehaviour
         Animator = GetComponent<Animator>();
         Health = GetComponent<Health>();
         Health.OnDeath += OnDeath;
-        //CurrentState = State.Small;
+        CurrentState = State.Small;
     }
 
     private void OnDeath(Health hp)
@@ -71,20 +86,20 @@ public class Mario : MonoBehaviour
         PlatformController.BoxCollider2D.enabled = false;
 
         GameManager.Instance.Invoke(nameof(GameManager.RestartLevel), 3.0f);
-        Animator.Play("Mario_Dead");
+        CurrentAnimation = Animation.Dead;
         //Destroy(gameObject);
-        
+
     }
 
     private void OnLand(PlatformController platformController)
     {
         if (platformController.IsMoving)
         {
-            Animator.Play("Mario_Run");
+            CurrentAnimation = Animation.Run;
         }
         else
         {
-            Animator.Play("Mario_Idle");
+            CurrentAnimation = Animation.Idle;
         }
     }
 
@@ -92,7 +107,7 @@ public class Mario : MonoBehaviour
     {
         if (!PlatformController.IsGrounded)
         {
-            Animator.Play("Mario_Jump");
+            CurrentAnimation = Animation.Jump;
         }
     }
 
@@ -100,23 +115,23 @@ public class Mario : MonoBehaviour
     {
         if (PlatformController.IsGrounded)
         {
-            Animator.Play("Mario_Idle");
+            CurrentAnimation = Animation.Idle;
         }
-        
+
     }
 
     private void OnMoveStart(PlatformController platformController)
     {
         if (PlatformController.IsGrounded)
         {
-            Animator.Play("Mario_Run");
+            CurrentAnimation = Animation.Run;
         }
-        
+
     }
 
     private void OnJump(PlatformController platformController)
     {
-        Animator.Play("Mario_Jump");
+        CurrentAnimation = Animation.Jump;
     }
 
     private void Update()
@@ -126,7 +141,7 @@ public class Mario : MonoBehaviour
 
         //Run speed
 
-        if (Animator.GetCurrentAnimatorStateInfo(0).IsName("Mario_Run"))
+        if (CurrentAnimation == Animation.Run)
         {
             var speedRatio = Math.Abs(PlatformController.CurrentSpeed / PlatformController.MoveSpeed);
             Animator.speed = RunAnimationSpeed.Lerp(speedRatio);
@@ -134,6 +149,21 @@ public class Mario : MonoBehaviour
         else
         {
             Animator.speed = 1.0f;
+        }
+
+        //Testing State inputs
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            CurrentState = State.Small;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            CurrentState = State.Big;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            CurrentState = State.Fire;
         }
     }
 
@@ -156,7 +186,7 @@ public class Mario : MonoBehaviour
             var marioPosition = PlatformController.BoxCollider2D.bounds.min.y;
             var enemyPosition = collision.bounds.min.y + 0.5 * collision.bounds.extents.y;
 
-            if (marioPosition>enemyPosition)
+            if (marioPosition > enemyPosition)
             {
                 // Mario wins
                 health.Value -= 1;
@@ -175,7 +205,7 @@ public class Mario : MonoBehaviour
 
         var spike = collision.GetComponent<Spike>();
 
-        if (spike != null) 
+        if (spike != null)
         {
             Health.Value -= 1;
         }
