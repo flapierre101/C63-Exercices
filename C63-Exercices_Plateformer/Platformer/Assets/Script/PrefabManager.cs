@@ -6,10 +6,10 @@ public class PrefabManager : MonoBehaviour
 {
     public enum Global
     {
+        BulletBill,
         Shell,
         Smoke,
         Turtle1,
-        Bullet,
 
         Count
     };

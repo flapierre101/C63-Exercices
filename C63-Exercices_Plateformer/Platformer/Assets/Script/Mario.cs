@@ -5,6 +5,44 @@ using UnityEngine;
 
 public class Mario : MonoBehaviour
 {
+    //public enum State
+    //{
+    //    Small,
+    //    Big,
+    //    Fire,
+    //}
+    //public enum Animation
+    //{
+    //    Idle,
+    //    Jump,
+    //    Run,
+    //    Dead,
+    //}
+
+    //private State _curentState;
+
+    //public State CurrentState
+    //{
+    //    get { return _curentState; }
+    //    set
+    //    {
+    //        _curentState = value;
+    //        UpdateAnimations();
+    //    }
+    //}
+
+    //public string AnimationName { 
+    //    get {
+    //        var prefix = CurrentState.ToString();
+    //        var suffix = CurrentState.ToString();
+    //        return "Mario_" + prefix + " " + suffix;
+    //    } 
+    //}
+    //private void UpdateAnimations()
+    //{
+    //    var animationName = AnimationName;
+    //}
+
     public PlatformController PlatformController { get; private set; }
     public Animator Animator { get; private set; }
     public Health Health { get; private set; }
@@ -22,17 +60,18 @@ public class Mario : MonoBehaviour
         Animator = GetComponent<Animator>();
         Health = GetComponent<Health>();
         Health.OnDeath += OnDeath;
+        //CurrentState = State.Small;
     }
 
     private void OnDeath(Health hp)
     {
-        Animator.Play("Mario_Dead");
         GameManager.Instance.SoundManager.Play(SoundManager.Sfx.Dead);
         PlatformController.enabled = false;
         PlatformController.Rigidbody2D.simulated = false;
         PlatformController.BoxCollider2D.enabled = false;
 
         GameManager.Instance.Invoke(nameof(GameManager.RestartLevel), 3.0f);
+        Animator.Play("Mario_Dead");
         //Destroy(gameObject);
         
     }
@@ -51,7 +90,10 @@ public class Mario : MonoBehaviour
 
     private void OnFall(PlatformController platformController)
     {
-        Animator.Play("Mario_Jump");
+        if (!PlatformController.IsGrounded)
+        {
+            Animator.Play("Mario_Jump");
+        }
     }
 
     private void OnMoveStop(PlatformController platformController)

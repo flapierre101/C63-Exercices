@@ -77,6 +77,7 @@ public class PlatformController : MonoBehaviour
     }
 
     private float JumpDelayTimer { get; set; }
+    private bool JumpForcePending { get; set; }
 
     public void ResetJumpsRemaining()
     {
@@ -85,6 +86,11 @@ public class PlatformController : MonoBehaviour
 
     public void Jump()
     {
+        if (JumpForcePending)
+            return;
+
+        JumpForcePending = true;
+
         // Cancel previous fall momentum on jump
         Rigidbody2D.velocity = Rigidbody2D.velocity.WithY(0);
 
@@ -190,6 +196,8 @@ public class PlatformController : MonoBehaviour
 
     private void UpdateJump()
     {
+        JumpForcePending = false;
+
         if (!InputJump)
             return;
 
