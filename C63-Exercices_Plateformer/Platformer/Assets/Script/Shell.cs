@@ -45,9 +45,22 @@ public class Shell : MonoBehaviour
             
             var shellPosition = PlatformController.BoxCollider2D.bounds.min.y + 0.5 * PlatformController.BoxCollider2D.bounds.extents.y;
             var marioPosition = collision.bounds.min.y;
-            GameManager.Instance.SoundManager.Play(SoundManager.Sfx.Kick);
+            
             if (marioPosition < shellPosition && PlatformController.IsMoving)
-                health.Value -= health.Value;
+            {
+                if (!collision.GetComponent<Mario>())
+                {
+                    health.Value -= health.Value;
+                }
+                else
+                {
+                    if (health.InvincibilityTimer <= 0.0f)
+                    {
+                        health.Value -= 1;
+                    }
+                }
+                
+            }
             else if (collision.GetComponent<Mario>())
             {
                 
@@ -68,6 +81,7 @@ public class Shell : MonoBehaviour
                     {
                         PlatformController.FacingController.Facing = Facing.Left;
                     }
+                    GameManager.Instance.SoundManager.Play(SoundManager.Sfx.Kick);
                 }
             }
         }

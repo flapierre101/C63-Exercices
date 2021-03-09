@@ -64,6 +64,9 @@ public class Mario : MonoBehaviour
 
     public Vector2 RunAnimationSpeed = new Vector2(0.05f, 0.35f);
 
+    public Flash Flash;
+    public Transform FireballSpawnPoint;
+
     private void Awake()
     {
         PlatformController = GetComponent<PlatformController>();
@@ -72,10 +75,27 @@ public class Mario : MonoBehaviour
         PlatformController.OnMoveStart += OnMoveStart;
         PlatformController.OnMoveStop += OnMoveStop;
         PlatformController.OnLand += OnLand;
+        
         Animator = GetComponent<Animator>();
         Health = GetComponent<Health>();
         Health.OnDeath += OnDeath;
+        Health.OnHit += OnHit;
         CurrentState = State.Small;
+        Flash = GetComponent<Flash>();
+    }
+
+    private void OnHit(Health hp)
+    {
+
+        if (hp.Value == 2)
+        {
+            CurrentState = State.Big;
+        }
+        else if (hp.Value == 1)
+        {
+            CurrentState = State.Small;
+        }
+        Flash.StartFlash();
     }
 
     private void OnDeath(Health hp)
@@ -138,10 +158,24 @@ public class Mario : MonoBehaviour
     {
         PlatformController.InputJump |= Input.GetButtonDown("Jump");
         PlatformController.InputMove = Input.GetAxisRaw("Horizontal");
+        if (Input.GetMouseButtonDown(0) && CurrentState == State.Fire)
+        {
+            var fireballGO = GameManager.Instance.PrefabManager.Instancier(PrefabManager.Global.Fireball, FireballSpawnPoint.position, gameObject.transform.rotation);
+            var fireball = fireballGO.GetComponent<Fireball>();
+            if (transform.position.x < fireballGO.transform.position.x)
+            {
+                fireball.PlatformController.FacingController.Facing = Facing.Right;
+            }
+            else
+            {
+                fireball.PlatformController.FacingController.Facing = Facing.Left;
+            }
+            GameManager.Instance.SoundManager.Play(SoundManager.Sfx.Fireball);
+        }
 
-        //Run speed
+            //Run speed
 
-        if (CurrentAnimation == Animation.Run)
+            if (CurrentAnimation == Animation.Run)
         {
             var speedRatio = Math.Abs(PlatformController.CurrentSpeed / PlatformController.MoveSpeed);
             Animator.speed = RunAnimationSpeed.Lerp(speedRatio);
@@ -198,8 +232,11 @@ public class Mario : MonoBehaviour
             else
             {
                 // Enemy wins
+                if (health.InvincibilityTimer <= 0.0f)
+                {
+                    Health.Value -= 1;
+                }
 
-                Health.Value -= 1;
             }
         }
 

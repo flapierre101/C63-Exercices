@@ -7,6 +7,10 @@ public class PrefabManager : MonoBehaviour
     public enum Global
     {
         BulletBill,
+        Fireball,
+        Flower,
+        Mushroom,
+        Puff,
         Shell,
         Smoke,
         Turtle1,
@@ -30,8 +34,8 @@ public class PrefabManager : MonoBehaviour
             (int)Global.Count + ") does not match Resources folder (" + PrefabsObjects.Length + ")");
     }
 
-    public void Instancier(Global global, Vector3 pos, Quaternion rot)
+    public GameObject Instancier(Global global, Vector3 pos, Quaternion rot)
     {
-        Instantiate(PrefabsObjects[(int)global], pos, rot);
+        return Instantiate(PrefabsObjects[(int)global], pos, rot);
     }
 }
