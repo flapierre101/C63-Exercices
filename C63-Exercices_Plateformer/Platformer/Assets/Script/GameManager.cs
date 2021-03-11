@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+
+
 
 public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
-    public Plane[] FrustumPlanes { get; private set; }
-
     public static GameManager Instance
     {
         get
@@ -30,22 +27,20 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    //propg tab tab
     public PrefabManager PrefabManager { get; private set; }
     public SoundManager SoundManager { get; private set; }
-
-    public void RestartLevel()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
+    public LevelManager LevelManager { get; private set; }
 
     public Mario Mario { get; private set; }
+    public Level Level { get; private set; }
     public Camera Camera { get; private set; }
+    public Plane[] FrustumPlanes { get; private set; }
 
     private void Initialize()
     {
         SoundManager = GetComponentInChildren<SoundManager>();
         PrefabManager = GetComponentInChildren<PrefabManager>();
+        LevelManager = GetComponentInChildren<LevelManager>();
 
         SceneManager.sceneLoaded += OnSceneLoaded;
 
@@ -59,13 +54,42 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded()
     {
+        Level = FindObjectOfType<Level>();
         Camera = FindObjectOfType<Camera>();
-        Mario = FindObjectOfType<Mario>();
+
+        // Turning off a single layer by code
+        //Camera.cullingMask &= ~(1 << LayerMask.NameToLayer("EnemyHitbox"));
+
+        // Dynamically create Mario in the scene
+        if (!Mario)
+        {
+            Mario = FindObjectOfType<Mario>();
+
+            if (!Mario)
+            {
+                var marioGameObject = PrefabManager.Instancier(PrefabManager.Global.Mario, Vector3.zero, Quaternion.identity);
+                Mario = marioGameObject.GetComponent<Mario>();
+                DontDestroyOnLoad(Mario);
+            }
+        }
+
+        LevelManager.OnLevelStart();
     }
 
     private void Update()
     {
         FrustumPlanes = GeometryUtility.CalculateFrustumPlanes(Camera.main);
+
+        if (Input.GetKeyDown(KeyCode.F10))
+        {
+            PlatformController.ShowDebug = !PlatformController.ShowDebug;
+        }
+    }
+
+    public void RestartLevel()
+    {
+        LevelManager.GoToLevel(LevelManager.CurrentLevel, LevelManager.LevelEntranceId);
+        Mario.OnLevelRestart();
     }
 
     public bool IsInsideCamera(Renderer renderer)

@@ -9,6 +9,7 @@ public class PrefabManager : MonoBehaviour
         BulletBill,
         Fireball,
         Flower,
+        Mario,
         Mushroom,
         Puff,
         Shell,

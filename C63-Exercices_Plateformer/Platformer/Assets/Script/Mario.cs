@@ -154,6 +154,23 @@ public class Mario : MonoBehaviour
         CurrentAnimation = Animation.Jump;
     }
 
+    public void OnLevelStart(LevelEntrance levelEntrance)
+    {
+        if (levelEntrance != null)
+        {
+            transform.position = levelEntrance.transform.position;
+        }
+        else
+        {
+            transform.position = Vector3.zero;
+        }
+
+        PlatformController.Reset();
+    }
+    public void OnLevelRestart()
+    {
+        CurrentState = State.Small;
+    }
     private void Update()
     {
         PlatformController.InputJump |= Input.GetButtonDown("Jump");
