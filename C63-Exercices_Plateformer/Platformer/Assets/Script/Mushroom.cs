@@ -12,6 +12,7 @@ public class Mushroom : MonoBehaviour
         mario = GameManager.Instance.Mario;
         PlatformController = GetComponent<PlatformController>();
         PlatformController.OnWall += OnWall;
+        PlatformController.FacingController.Facing = Facing.Right;
     }
 
     private void OnWall(PlatformController platformController)
@@ -33,6 +34,8 @@ public class Mushroom : MonoBehaviour
             {
                 GameManager.Instance.SoundManager.Play(SoundManager.Sfx.Powerup);
                 mario.CurrentState = Mario.State.Big;
+                if (mario.Health.Value == 1)
+                    mario.Health.Value += 1;
             }
         }
     }

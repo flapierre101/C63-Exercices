@@ -21,11 +21,15 @@ public class Flower : MonoBehaviour
             {
                 GameManager.Instance.SoundManager.Play(SoundManager.Sfx.Powerup);
                 mario.CurrentState = Mario.State.Big;
+                if (mario.Health.Value == 1)
+                    mario.Health.Value += 1;
             }
             else if (mario.CurrentState == Mario.State.Big)
             {
                 GameManager.Instance.SoundManager.Play(SoundManager.Sfx.Powerup);
                 mario.CurrentState = Mario.State.Fire;
+                if (mario.Health.Value == 2)
+                    mario.Health.Value += 1;
             }
         }
     }

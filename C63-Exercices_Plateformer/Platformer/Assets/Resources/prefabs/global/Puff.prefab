@@ -115,6 +115,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FadeInTime: 0
-  FadeWaitTime: 0.7
+  FadeWaitTime: 0.5
   FadeOutTime: 0
   DestroyOnFadeOut: 1

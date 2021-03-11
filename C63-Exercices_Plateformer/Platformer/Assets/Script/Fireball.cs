@@ -15,8 +15,9 @@ public class Fireball : MonoBehaviour
 
     private void OnWall(PlatformController platformController)
     {
-        PlatformController.FacingController.Flip();
-        PlatformController.InputMove = PlatformController.FacingController.Direction;
+        GameManager.Instance.SoundManager.Play(SoundManager.Sfx.EnemyFireball);
+        GameManager.Instance.PrefabManager.Instancier(PrefabManager.Global.Puff, transform.position, transform.rotation);
+        Destroy(gameObject);
     }
 
     private void Update()
@@ -24,5 +25,20 @@ public class Fireball : MonoBehaviour
         PlatformController.InputMove = PlatformController.FacingController.Direction;
         PlatformController.InputJump = true;
 
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        var health = collision.GetComponentInParent<Health>();
+        if (health)
+        {
+            if (!collision.GetComponent<Mario>())
+            {
+                health.Value -= 1;
+                GameManager.Instance.SoundManager.Play(SoundManager.Sfx.EnemyFireball);
+                GameManager.Instance.PrefabManager.Instancier(PrefabManager.Global.Puff, transform.position, transform.rotation);
+                Destroy(gameObject);
+            }
+        }
     }
 }
