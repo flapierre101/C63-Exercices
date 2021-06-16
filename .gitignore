@@ -9,9 +9,9 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Mm]emoryCaptures/
-../../C63-Exercice_4/
-../../C63-Exercice_5/
-../../C63-Exercices_2/
+../C63-Exercice_4/
+../C63-Exercice_5/
+../C63-Exercices_2/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
@@ -62,6 +62,3 @@ sysinfo.txt
 crashlytics-build.properties
 
 
-/C63-Exercice_4/
-/C63-Exercice_5/
-/C63-Exercices_2/
